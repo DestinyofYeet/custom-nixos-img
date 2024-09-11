@@ -15,7 +15,12 @@
 
       shellHook = ''
         nixos-generate --format iso --configuration ./img.nix -o result
-        qemu-system-x86_64 -m 2G --drive media=cdrom,file=result/iso/nixos-24.11pre-git-x86_64-linux.iso,format=raw,readonly=on -cpu host -smp 6 -enable-kvm -vga virtio -display gtk,gl=on
+        if [ $? -ne 0 ]; then
+          echo "Error in nixos-generate, not starting qemu!"
+        else
+          qemu-system-x86_64 -m 6G --drive media=cdrom,file=result/iso/nixos-24.11pre-git-x86_64-linux.iso,format=raw,readonly=on -cpu host -smp 6 -enable-kvm -vga virtio -display gtk,gl=on
+        fi
+        exit
       '';
     };
   };
